@@ -1,0 +1,137 @@
+MODULE Environment(
+        S2A_red,S3A_red,S4A_red,
+        S2B_red,S3B_red,S4B_red,
+        S2A_green,S3A_green,S4A_green,
+        S2B_green,S3B_green,S4B_green,
+        P1A_goal_straight,P1A_goal_curved,
+        P1B_goal_straight,P1B_goal_curved,
+        P2A_goal_straight,P2A_goal_curved,
+        P2B_goal_straight,P2B_goal_curved    
+    )
+    
+    
+  DEFINE
+    T1A_occupied := FALSE;
+    T2A_occupied := FALSE;
+    T3A_occupied := FALSE;
+    T4A_occupied := FALSE;
+    T1B_occupied := FALSE;
+    T2B_occupied := FALSE;
+    T3B_occupied := FALSE;
+    T4B_occupied := FALSE;
+    S1A_red   := TRUE;
+    S1B_red   := TRUE;
+    S1A_green := FALSE;
+    S1B_green := FALSE;
+    P1A_locked_straight := TRUE;
+    P2A_locked_straight := TRUE;
+    P1B_locked_straight := TRUE;
+    P2B_locked_straight := TRUE;
+    P1A_locked_curved := FALSE;
+    P2A_locked_curved := FALSE;
+    P1B_locked_curved := FALSE;
+    P2B_locked_curved := FALSE;
+
+
+MODULE Interlocking(
+        T1A_occupied,T2A_occupied,T3A_occupied,T4A_occupied,
+        T1B_occupied,T2B_occupied,T3B_occupied,T4B_occupied,
+        S1A_red,S1A_green,S1B_red,S1B_green,
+        P1A_locked_straight,P1A_locked_curved,
+        P1B_locked_straight,P1B_locked_curved,
+        P2A_locked_straight,P2A_locked_curved,
+        P2B_locked_straight,P2B_locked_curved
+    )
+  DEFINE
+    S2A_red   := TRUE;
+    S3A_red   := TRUE;
+    S4A_red   := TRUE;
+    S2B_red   := TRUE;
+    S3B_red   := TRUE;
+    S4B_red   := TRUE;
+    S2A_green := FALSE;
+    S3A_green := FALSE;
+    S4A_green := FALSE;
+    S2B_green := FALSE;
+    S3B_green := FALSE;
+    S4B_green := FALSE;
+    P1A_goal_straight := TRUE;
+    P2A_goal_straight := TRUE;
+    P1B_goal_straight := TRUE;
+    P2B_goal_straight := TRUE;
+    P1A_goal_curved := FALSE;
+    P2A_goal_curved := FALSE;
+    P1B_goal_curved := FALSE;
+    P2B_goal_curved := FALSE;
+
+
+MODULE main
+  DEFINE
+    T1A_occupied := environment.T1A_occupied;
+    T2A_occupied := environment.T2A_occupied;
+    T3A_occupied := environment.T3A_occupied;
+    T4A_occupied := environment.T4A_occupied;
+    T1B_occupied := environment.T1B_occupied;
+    T2B_occupied := environment.T2B_occupied;
+    T3B_occupied := environment.T3B_occupied;
+    T4B_occupied := environment.T4B_occupied;
+    S1A_red   := environment.S1A_red;
+    S1B_red   := environment.S1B_red;
+    S1A_green := environment.S1A_green;
+    S1B_green := environment.S1B_green;
+    P1A_locked_straight := environment.P1A_locked_straight;
+    P2A_locked_straight := environment.P2A_locked_straight;
+    P1B_locked_straight := environment.P1B_locked_straight;
+    P2B_locked_straight := environment.P2B_locked_straight;
+    P1A_locked_curved := environment.P1A_locked_curved;
+    P2A_locked_curved := environment.P2A_locked_curved;
+    P1B_locked_curved := environment.P1B_locked_curved;
+    P2B_locked_curved := environment.P2B_locked_curved;
+
+    S2A_red   := interlocking.S2A_red;
+    S3A_red   := interlocking.S3A_red;
+    S4A_red   := interlocking.S4A_red;
+    S2B_red   := interlocking.S2B_red;
+    S3B_red   := interlocking.S3B_red;
+    S4B_red   := interlocking.S4B_red;
+    S2A_green := interlocking.S2A_green;
+    S3A_green := interlocking.S3A_green;
+    S4A_green := interlocking.S4A_green;
+    S2B_green := interlocking.S2B_green;
+    S3B_green := interlocking.S3B_green;
+    S4B_green := interlocking.S4B_green;
+    P1A_goal_straight := interlocking.P1A_goal_straight;
+    P2A_goal_straight := interlocking.P2A_goal_straight;
+    P1B_goal_straight := interlocking.P1B_goal_straight;
+    P2B_goal_straight := interlocking.P2B_goal_straight;
+    P1A_goal_curved := interlocking.P1A_goal_curved;
+    P2A_goal_curved := interlocking.P2A_goal_curved;
+    P1B_goal_curved := interlocking.P1B_goal_curved;
+    P2B_goal_curved := interlocking.P2B_goal_curved;
+  VAR
+    environment  : Environment(
+        S2A_red,S3A_red,S4A_red,
+        S2B_red,S3B_red,S4B_red,
+        S2A_green,S3A_green,S4A_green,
+        S2B_green,S3B_green,S4B_green,
+        P1A_goal_straight,P1A_goal_curved,
+        P1B_goal_straight,P1B_goal_curved,
+        P2A_goal_straight,P2A_goal_curved,
+        P2B_goal_straight,P2B_goal_curved     
+    );
+    interlocking : Interlocking(
+        next(T1A_occupied),next(T2A_occupied),next(T3A_occupied),next(T4A_occupied),
+        next(T1B_occupied),next(T2B_occupied),next(T3B_occupied),next(T4B_occupied),
+        next(S1A_red),next(S1A_green),next(S1B_red),next(S1B_green),
+        next(P1A_locked_straight),next(P1A_locked_curved),
+        next(P1B_locked_straight),next(P1B_locked_curved),
+        next(P2A_locked_straight),next(P2A_locked_curved),
+        next(P2B_locked_straight),next(P2B_locked_curved)
+    );
+
+
+-- For each of the tracks T3A and T3B there is at least one test case
+-- in which the track is occupied at least once.
+
+CTLSPEC EF T3A_occupied
+CTLSPEC EF T3B_occupied

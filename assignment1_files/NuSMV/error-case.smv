@@ -1,0 +1,453 @@
+-- Flattened FSM model generated from stdin
+-- Dumped layers are: model 
+
+MODULE main
+-- Input variables from layer 'model'
+-- State variables from layer 'model'
+VAR
+__expr_0 : {straight, moving, curved};
+__expr_1 : {straight, moving, curved};
+__expr_2 : {straight, moving, curved};
+__expr_3 : {straight, moving, curved};
+__expr_57 : {T1A, T2A, T3A, T4A, T1B, T2B, T3B, T4B, T0A, T0B, T00};
+__expr_5 : boolean;
+__expr_59 : {T1A, T2A, T3A, T4A, T1B, T2B, T3B, T4B, T0A, T0B, T00};
+__expr_7 : boolean;
+__expr_8 : boolean;
+__expr_9 : boolean;
+__expr_10 : boolean;
+__expr_11 : boolean;
+__expr_12 : boolean;
+__expr_13 : boolean;
+__expr_48 : boolean;
+__expr_52 : boolean;
+__expr_50 : boolean;
+__expr_54 : boolean;
+__expr_49 : boolean;
+__expr_53 : boolean;
+__expr_51 : boolean;
+__expr_55 : boolean;
+
+-- Frozen variables from layer 'model'
+-- Defines from layer 'model'
+DEFINE
+P2B_goal_curved := __expr_55;
+P1B_goal_curved := __expr_51;
+P2A_goal_curved := __expr_53;
+P1A_goal_curved := __expr_49;
+P2B_goal_straight := __expr_54;
+P1B_goal_straight := __expr_50;
+P2A_goal_straight := __expr_52;
+P1A_goal_straight := __expr_48;
+S4B_green := __expr0;
+S3B_green := !__expr_12;
+S2B_green := __expr1;
+S4A_green := __expr2;
+S3A_green := !__expr_9;
+S2A_green := __expr3;
+S4B_red := __expr_13;
+S3B_red := __expr_12;
+S2B_red := __expr_11;
+S4A_red := __expr_10;
+S3A_red := __expr_9;
+S2A_red := __expr_8;
+P2B_locked_curved := __expr4;
+P1B_locked_curved := __expr5;
+P2A_locked_curved := __expr6;
+P1A_locked_curved := __expr7;
+P2B_locked_straight := __expr8;
+P1B_locked_straight := __expr9;
+P2A_locked_straight := __expr10;
+P1A_locked_straight := __expr11;
+S1B_green := __expr12;
+S1A_green := __expr13;
+S1B_red := __expr16;
+S1A_red := __expr19;
+T4B_occupied := __expr22;
+T3B_occupied := __expr25;
+T2B_occupied := __expr28;
+T1B_occupied := __expr31;
+T4A_occupied := __expr34;
+T3A_occupied := __expr37;
+T2A_occupied := __expr40;
+T1A_occupied := __expr43;
+__expr_22 := __expr4;
+__expr_23 := __expr5;
+__expr_24 := __expr6;
+__expr_25 := __expr7;
+__expr_26 := __expr8;
+__expr_27 := __expr10;
+__expr_28 := __expr9;
+__expr_29 := __expr11;
+__expr_30 := __expr12;
+__expr_31 := __expr13;
+__expr_32 := __expr16;
+__expr_33 := __expr19;
+__expr_34 := __expr22;
+__expr_35 := __expr25;
+__expr_36 := __expr28;
+__expr_37 := __expr31;
+__expr_38 := __expr34;
+__expr_39 := __expr37;
+__expr_40 := __expr40;
+__expr_41 := __expr43;
+__expr_42 := __expr0;
+__expr_43 := !__expr_12;
+__expr_44 := __expr1;
+__expr_45 := __expr2;
+__expr_46 := !__expr_9;
+__expr_47 := __expr3;
+
+CONSTANTS
+ straight, moving, curved, T1A, T2A, T3A, T4A, T1B, T2B, T3B, T4B, T0A, T0B, T00 ;
+
+-- Assignments from layer 'model'
+ASSIGN
+init(__expr_0) := moving;
+next(__expr_0) := case
+(__expr_48 & __expr11) : straight;
+__expr_48 : __expr44;
+(__expr_49 & __expr7) : curved;
+__expr_49 : __expr45;
+TRUE : __expr_0;
+esac;
+
+ASSIGN
+init(__expr_1) := moving;
+next(__expr_1) := case
+(__expr_50 & __expr9) : straight;
+__expr_50 : __expr44;
+(__expr_51 & __expr5) : curved;
+__expr_51 : __expr45;
+TRUE : __expr_1;
+esac;
+
+ASSIGN
+init(__expr_2) := moving;
+next(__expr_2) := case
+(__expr_52 & __expr10) : straight;
+__expr_52 : __expr44;
+(__expr_53 & __expr6) : curved;
+__expr_53 : __expr45;
+TRUE : __expr_2;
+esac;
+
+ASSIGN
+init(__expr_3) := moving;
+next(__expr_3) := case
+(__expr_54 & __expr8) : straight;
+__expr_54 : __expr44;
+(__expr_55 & __expr4) : curved;
+__expr_55 : __expr45;
+TRUE : __expr_3;
+esac;
+
+ASSIGN
+init(__expr_57) := T00;
+next(__expr_57) := case
+__expr_57 = T00 : __expr46;
+(__expr17 & __expr_5) : T1A;
+(__expr17 & __expr47) : T00;
+(__expr14 & __expr_5) : T1B;
+(__expr14 & __expr47) : T00;
+((__expr41 & __expr_5) & __expr3) : T2A;
+((__expr41 & __expr47) & __expr13) : T0A;
+((__expr29 & __expr_5) & __expr1) : T2B;
+((__expr29 & __expr47) & __expr12) : T0B;
+(__expr48 & __expr11) : T3A;
+(__expr48 & __expr7) : T4B;
+(__expr38 & __expr47) : T1A;
+(__expr49 & __expr9) : T3B;
+(__expr49 & __expr5) : T4A;
+(__expr26 & __expr47) : T1B;
+(__expr32 & __expr_5) : T3A;
+((__expr32 & __expr47) & __expr6) : T2B;
+(__expr20 & __expr_5) : T3B;
+((__expr20 & __expr47) & __expr4) : T2A;
+((__expr35 & __expr47) & __expr2) : T4A;
+((__expr23 & __expr47) & __expr0) : T4B;
+TRUE : __expr_57;
+esac;
+
+ASSIGN
+init(__expr_5) := TRUE;
+next(__expr_5) := case
+__expr_57 = T00 : TRUE;
+__expr35 : FALSE;
+__expr23 : FALSE;
+TRUE : __expr_5;
+esac;
+
+ASSIGN
+init(__expr_59) := T00;
+next(__expr_59) := case
+__expr_59 = T00 : __expr46;
+(__expr18 & __expr_7) : T1A;
+(__expr18 & __expr50) : T00;
+(__expr15 & __expr_7) : T1B;
+(__expr15 & __expr50) : T00;
+((__expr42 & __expr_7) & __expr3) : T2A;
+((__expr42 & __expr50) & __expr13) : T0A;
+((__expr30 & __expr_7) & __expr1) : T2B;
+((__expr30 & __expr50) & __expr12) : T0B;
+(__expr51 & __expr11) : T3A;
+(__expr51 & __expr7) : T4B;
+(__expr39 & __expr50) : T1A;
+(__expr52 & __expr9) : T3B;
+(__expr52 & __expr5) : T4A;
+(__expr27 & __expr50) : T1B;
+(__expr33 & __expr_7) : T3A;
+((__expr33 & __expr50) & __expr6) : T2B;
+(__expr21 & __expr_7) : T3B;
+((__expr21 & __expr50) & __expr4) : T2A;
+((__expr36 & __expr50) & __expr2) : T4A;
+((__expr24 & __expr50) & __expr0) : T4B;
+TRUE : __expr_59;
+esac;
+
+ASSIGN
+init(__expr_7) := TRUE;
+next(__expr_7) := case
+__expr_59 = T00 : TRUE;
+__expr36 : FALSE;
+__expr24 : FALSE;
+TRUE : __expr_7;
+esac;
+
+ASSIGN
+init(__expr_8) := TRUE;
+next(__expr_8) := (((!(__expr53 | __expr54) | next(__expr40)) | (next(__expr11) & next(__expr37))) | (next(__expr7) & (next(__expr25) | next(__expr22))));
+
+ASSIGN
+init(__expr_9) := TRUE;
+next(__expr_9) := (((!__expr53 | next(__expr40)) | next(__expr43)) | next(__expr19));
+
+ASSIGN
+init(__expr_10) := TRUE;
+next(__expr_10) := (((!__expr55 | next(__expr34)) | next(__expr28)) | next(__expr31));
+
+ASSIGN
+init(__expr_11) := TRUE;
+next(__expr_11) := (((!(__expr56 | __expr55) | next(__expr28)) | (next(__expr9) & next(__expr25))) | (next(__expr5) & (next(__expr37) | next(__expr34))));
+
+ASSIGN
+init(__expr_12) := TRUE;
+next(__expr_12) := (((!__expr56 | next(__expr28)) | next(__expr31)) | next(__expr16));
+
+ASSIGN
+init(__expr_13) := TRUE;
+next(__expr_13) := (((!__expr54 | next(__expr22)) | next(__expr40)) | next(__expr43));
+
+ASSIGN
+init(__expr_48) := FALSE;
+next(__expr_48) := case
+(__expr_48 & (__expr57 | !__expr_54)) : TRUE;
+(((((__expr57 & !next(__expr8)) & __expr58) & __expr59) & __expr60) & __expr61) : TRUE;
+((__expr_48 & next(__expr11)) & next(__expr8)) : FALSE;
+TRUE : __expr_48;
+esac;
+
+ASSIGN
+init(__expr_52) := FALSE;
+next(__expr_52) := next(__expr_50);
+
+ASSIGN
+init(__expr_50) := FALSE;
+next(__expr_50) := case
+(__expr_50 & (__expr62 | !__expr_52)) : TRUE;
+(((((__expr62 & !next(__expr10)) & __expr63) & __expr64) & __expr61) & __expr60) : TRUE;
+((__expr_50 & next(__expr9)) & next(__expr10)) : FALSE;
+TRUE : __expr_50;
+esac;
+
+ASSIGN
+init(__expr_54) := FALSE;
+next(__expr_54) := next(__expr_48);
+
+ASSIGN
+init(__expr_49) := FALSE;
+next(__expr_49) := case
+(__expr_49 & (__expr65 | __expr66)) : TRUE;
+(((((__expr65 & __expr66) & !next(__expr_48)) & __expr58) & __expr59) & next(__expr25)) : TRUE;
+((__expr_49 & next(__expr7)) & next(__expr4)) : FALSE;
+TRUE : __expr_49;
+esac;
+
+ASSIGN
+init(__expr_53) := FALSE;
+next(__expr_53) := next(__expr_51);
+
+ASSIGN
+init(__expr_51) := FALSE;
+next(__expr_51) := case
+(__expr_51 & (__expr67 | __expr68)) : TRUE;
+(((((__expr67 & __expr68) & !next(__expr_50)) & __expr63) & __expr64) & next(__expr37)) : TRUE;
+((__expr_51 & next(__expr5)) & next(__expr6)) : FALSE;
+TRUE : __expr_51;
+esac;
+
+ASSIGN
+init(__expr_55) := FALSE;
+next(__expr_55) := next(__expr_49);
+
+
+FAIRNESS
+ ((__expr11 | __expr7) | !(__expr_48 | __expr_49))
+
+
+FAIRNESS
+ ((__expr9 | __expr5) | !(__expr_50 | __expr_51))
+
+
+FAIRNESS
+ ((__expr10 | __expr6) | !(__expr_52 | __expr_53))
+
+
+FAIRNESS
+ ((__expr8 | __expr4) | !(__expr_54 | __expr_55))
+
+-- Symbols introduced by the dumper:
+DEFINE __expr66 := !next(__expr4) ;
+
+DEFINE __expr30 := __expr_59 = T1B ;
+
+DEFINE __expr64 := !next(__expr34) ;
+
+DEFINE __expr28 := (__expr26 | __expr27) ;
+
+DEFINE __expr8 := __expr_3 = straight ;
+
+DEFINE __expr21 := __expr_59 = T4B ;
+
+DEFINE __expr60 := !next(__expr37) ;
+
+DEFINE __expr25 := (__expr23 | __expr24) ;
+
+DEFINE __expr43 := (__expr41 | __expr42) ;
+
+DEFINE __expr47 := !__expr_5 ;
+
+DEFINE __expr27 := __expr_59 = T2B ;
+
+DEFINE __expr44 := moving union straight ;
+
+DEFINE __expr11 := __expr_0 = straight ;
+
+DEFINE __expr67 := !next(__expr5) ;
+
+DEFINE __expr49 := (__expr26 & __expr_5) ;
+
+DEFINE __expr7 := __expr_0 = curved ;
+
+DEFINE __expr1 := !__expr_11 ;
+
+DEFINE __expr35 := __expr_57 = T3A ;
+
+DEFINE __expr57 := !next(__expr11) ;
+
+DEFINE __expr65 := !next(__expr7) ;
+
+DEFINE __expr63 := !next(__expr28) ;
+
+DEFINE __expr52 := (__expr27 & __expr_7) ;
+
+DEFINE __expr38 := __expr_57 = T2A ;
+
+DEFINE __expr59 := !next(__expr22) ;
+
+DEFINE __expr32 := __expr_57 = T4A ;
+
+DEFINE __expr10 := __expr_2 = straight ;
+
+DEFINE __expr56 := (next(__expr9) & next(__expr10)) ;
+
+DEFINE __expr46 := (T00 union T0A) union T0B ;
+
+DEFINE __expr31 := (__expr29 | __expr30) ;
+
+DEFINE __expr50 := !__expr_7 ;
+
+DEFINE __expr22 := (__expr20 | __expr21) ;
+
+DEFINE __expr19 := (__expr17 | __expr18) ;
+
+DEFINE __expr16 := (__expr14 | __expr15) ;
+
+DEFINE __expr53 := (next(__expr11) & next(__expr8)) ;
+
+DEFINE __expr36 := __expr_59 = T3A ;
+
+DEFINE __expr13 := !__expr_33 ;
+
+DEFINE __expr14 := __expr_57 = T0B ;
+
+DEFINE __expr6 := __expr_2 = curved ;
+
+DEFINE __expr0 := !__expr_13 ;
+
+DEFINE __expr39 := __expr_59 = T2A ;
+
+DEFINE __expr33 := __expr_59 = T4A ;
+
+DEFINE __expr48 := (__expr38 & __expr_5) ;
+
+DEFINE __expr37 := (__expr35 | __expr36) ;
+
+DEFINE __expr41 := __expr_57 = T1A ;
+
+DEFINE __expr34 := (__expr32 | __expr33) ;
+
+DEFINE __expr58 := !next(__expr40) ;
+
+DEFINE __expr15 := __expr_59 = T0B ;
+
+DEFINE __expr17 := __expr_57 = T0A ;
+
+DEFINE __expr23 := __expr_57 = T3B ;
+
+DEFINE __expr61 := !next(__expr25) ;
+
+DEFINE __expr3 := !__expr_8 ;
+
+DEFINE __expr9 := __expr_1 = straight ;
+
+DEFINE __expr2 := !__expr_10 ;
+
+DEFINE __expr51 := (__expr39 & __expr_7) ;
+
+DEFINE __expr29 := __expr_57 = T1B ;
+
+DEFINE __expr4 := __expr_3 = curved ;
+
+DEFINE __expr68 := !next(__expr6) ;
+
+DEFINE __expr54 := (next(__expr7) & next(__expr4)) ;
+
+DEFINE __expr42 := __expr_59 = T1A ;
+
+DEFINE __expr20 := __expr_57 = T4B ;
+
+DEFINE __expr5 := __expr_1 = curved ;
+
+DEFINE __expr45 := moving union curved ;
+
+DEFINE __expr18 := __expr_59 = T0A ;
+
+DEFINE __expr40 := (__expr38 | __expr39) ;
+
+DEFINE __expr26 := __expr_57 = T2B ;
+
+DEFINE __expr24 := __expr_59 = T3B ;
+
+DEFINE __expr55 := (next(__expr5) & next(__expr6)) ;
+
+DEFINE __expr12 := !__expr_32 ;
+
+DEFINE __expr62 := !next(__expr9) ;
+
+
+-- For each of the tracks T3A and T3B there is at least one test case
+-- in which the track is occupied at least once.
+
+CTLSPEC EF T3A_occupied
+CTLSPEC EF T3B_occupied
