@@ -459,7 +459,7 @@ LTLSPEC NAME liveness1d := (G F T1B_occupied & S1B_red & S2B_red) -> (G F S1B_gr
 
 LTLSPEC NAME liveness2 := G F (!T1A_occupied) & G F (!T1B_occupied) & G F (!T2A_occupied) & G F (!T2B_occupied) & G F (!T3A_occupied) & G F (!T3B_occupied) & G F (!T4A_occupied) & G F (!T4B_occupied);
 
-CTLSPEC NAME liveness3 := AF T3A_occupied;
+CTLSPEC NAME liveness3 := AG EF T3A_occupied;
 
 CTLSPEC NAME liveness4 := EF T3A_occupied & T3B_occupied
 
@@ -505,10 +505,10 @@ CTLSPEC NAME safety4g := AG P2A_goal_curved -> A[P2A_goal_curved U P2A_locked_cu
 CTLSPEC NAME safety4h := AG P2B_goal_curved -> A[P2B_goal_curved U P2B_locked_curved]
 
 LTLSPEC NAME safety5 := G
-  (P1A_locked_curved | P1A_locked_curved | !T2A_occupied) &
-  (P1B_locked_curved | P1B_locked_curved | !T2B_occupied) &
-  (P2A_locked_curved | P2A_locked_curved | !T4A_occupied) &
-  (P2B_locked_curved | P2B_locked_curved | !T4B_occupied)
+  (P1A_locked_curved | P1A_locked_straight | !T2A_occupied) &
+  (P1B_locked_curved | P1B_locked_straight | !T2B_occupied) &
+  (P2A_locked_curved | P2A_locked_straight | !T4A_occupied) &
+  (P2B_locked_curved | P2B_locked_straight | !T4B_occupied)
 
 LTLSPEC NAME safety6 := G
   (!P2A_locked_straight | !T4A_occupied) &
