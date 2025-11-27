@@ -5,8 +5,10 @@ MODULE Points(goal_straight,goal_curved)
     init(status):=moving;
     next(status):=case
         goal_straight & status=curved   : moving;
+        goal_straight & status=moving   : {moving, straight};
         goal_straight                   : straight;
         goal_curved & status=straight   : moving;
+        goal_curved & status=moving     : {moving, curved};
         goal_curved                     : curved;        
         TRUE                            : status;
     esac;
