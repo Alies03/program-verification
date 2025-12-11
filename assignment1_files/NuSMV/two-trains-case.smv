@@ -1,0 +1,391 @@
+MODULE Points(goal_straight,goal_curved)
+  VAR
+    status : {straight,moving,curved};
+  ASSIGN
+    init(status):=moving;
+    next(status):=case
+        goal_straight & status=curved   : moving;
+        goal_straight & status=moving   : {moving, straight};
+        goal_straight                   : straight;
+        goal_curved & status=straight   : moving;
+        goal_curved & status=moving     : {moving, curved};
+        goal_curved                     : curved;        
+        TRUE                            : status;
+    esac;
+
+MODULE Train (
+        may_approach_A, may_approach_B,
+        S2A_red,S3A_red,S4A_red,
+        S2B_red,S3B_red,S4B_red,
+        S2A_green,S3A_green,S4A_green,
+        S2B_green,S3B_green,S4B_green,
+        S1A_red,S1A_green,S1B_red,S1B_green,
+        P1A_locked_straight,P1A_locked_curved,
+        P1B_locked_straight,P1B_locked_curved,
+        P2A_locked_straight,P2A_locked_curved,
+        P2B_locked_straight,P2B_locked_curved
+  )
+  VAR
+    location : {T1A,T2A,T3A,T4A,T1B,T2B,T3B,T4B,T0A,T0B,T00};
+    in_bound : boolean;
+  ASSIGN
+    init(in_bound) := TRUE;
+    next(in_bound) := case
+      location=T00 : TRUE;
+      location=T3A : FALSE;
+      location=T3B : FALSE;
+      TRUE : in_bound;
+    esac;
+    init(location) := T00;
+    next(location) := case
+      location=T00 &  may_approach_A &  may_approach_B : { T00 , T0A , T0B };
+      location=T00 &  may_approach_A & !may_approach_B : { T00 , T0A };
+      location=T00 & !may_approach_A &  may_approach_B : { T00 , T0B };
+      location=T00 & !may_approach_A & !may_approach_B : T00;
+      
+      location=T0A & in_bound  : T1A;
+      location=T0A & !in_bound : T00;
+      location=T0B & in_bound  : T1B;
+      location=T0B & !in_bound : T00;
+      
+      location=T1A & in_bound  & S2A_green : T2A;
+      location=T1A & !in_bound & S1A_green : T0A;
+      location=T1B & in_bound  & S2B_green : T2B;
+      location=T1B & !in_bound & S1B_green : T0B;
+      
+      location=T2A & in_bound & P1A_locked_straight : T3A ;
+      location=T2A & in_bound & P1A_locked_curved : T4B ;
+      location=T2A & !in_bound : T1A;
+      location=T2B & in_bound & P1B_locked_straight : T3B ;
+      location=T2B & in_bound & P1B_locked_curved : T4A ;
+      location=T2B & !in_bound : T1B;
+
+      location=T4A & in_bound : T3A ;
+      location=T4A & !in_bound & P2A_locked_curved : T2B ;
+      location=T4B & in_bound : T3B ;
+      location=T4B & !in_bound & P2B_locked_curved : T2A ;
+      
+      location=T3A & !in_bound & S4A_green : T4A;
+      location=T3B & !in_bound & S4B_green : T4B;
+
+      TRUE:location;
+    esac;
+
+MODULE Environment(
+        S2A_red,S3A_red,S4A_red,
+        S2B_red,S3B_red,S4B_red,
+        S2A_green,S3A_green,S4A_green,
+        S2B_green,S3B_green,S4B_green,
+        P1A_goal_straight,P1A_goal_curved,
+        P1B_goal_straight,P1B_goal_curved,
+        P2A_goal_straight,P2A_goal_curved,
+        P2B_goal_straight,P2B_goal_curved    
+    )
+    
+  DEFINE
+    T1A_occupied := train1.location = T1A | train2.location = T1A;
+    T2A_occupied := train1.location = T2A | train2.location = T2A;
+    T3A_occupied := train1.location = T3A | train2.location = T3A;
+    T4A_occupied := train1.location = T4A | train2.location = T4A;
+    T1B_occupied := train1.location = T1B | train2.location = T1B;
+    T2B_occupied := train1.location = T2B | train2.location = T2B;
+    T3B_occupied := train1.location = T3B | train2.location = T3B;
+    T4B_occupied := train1.location = T4B | train2.location = T4B;
+    S1A_red   := train1.location = T0A | train2.location = T0A; 
+    S1B_red   := train1.location = T0B | train2.location = T0B;
+    S1A_green := !S1A_red;
+    S1B_green := !S1B_red;
+    P1A_locked_straight := P1A.status=straight;
+    P1B_locked_straight := P1B.status=straight;
+    P2A_locked_straight := P2A.status=straight;
+    P2B_locked_straight := P2B.status=straight;
+    P1A_locked_curved := P1A.status=curved;
+    P2A_locked_curved := P2A.status=curved;
+    P1B_locked_curved := P1B.status=curved;
+    P2B_locked_curved := P2B.status=curved;
+    may_approach_A := TRUE;
+    may_approach_B := TRUE;
+    
+  VAR
+    P1A : Points(P1A_goal_straight,P1A_goal_curved);
+    P1B : Points(P1B_goal_straight,P1B_goal_curved);
+    P2A : Points(P2A_goal_straight,P2A_goal_curved);
+    P2B : Points(P2B_goal_straight,P2B_goal_curved);
+    train1 : Train(
+        may_approach_A, may_approach_B,
+        S2A_red,S3A_red,S4A_red,
+        S2B_red,S3B_red,S4B_red,
+        S2A_green,S3A_green,S4A_green,
+        S2B_green,S3B_green,S4B_green,
+        S1A_red,S1A_green,S1B_red,S1B_green,
+        P1A_locked_straight,P1A_locked_curved,
+        P1B_locked_straight,P1B_locked_curved,
+        P2A_locked_straight,P2A_locked_curved,
+        P2B_locked_straight,P2B_locked_curved
+    );
+    train2 : Train(
+        may_approach_A, may_approach_B,
+        S2A_red,S3A_red,S4A_red,
+        S2B_red,S3B_red,S4B_red,
+        S2A_green,S3A_green,S4A_green,
+        S2B_green,S3B_green,S4B_green,
+        S1A_red,S1A_green,S1B_red,S1B_green,
+        P1A_locked_straight,P1A_locked_curved,
+        P1B_locked_straight,P1B_locked_curved,
+        P2A_locked_straight,P2A_locked_curved,
+        P2B_locked_straight,P2B_locked_curved
+    );
+
+
+MODULE Interlocking(
+        T1A_occupied,T2A_occupied,T3A_occupied,T4A_occupied,
+        T1B_occupied,T2B_occupied,T3B_occupied,T4B_occupied,
+        S1A_red,S1A_green,S1B_red,S1B_green,
+        P1A_locked_straight,P1A_locked_curved,
+        P1B_locked_straight,P1B_locked_curved,
+        P2A_locked_straight,P2A_locked_curved,
+        P2B_locked_straight,P2B_locked_curved
+    )
+  DEFINE
+    S2A_green := !S2A_red;
+    S3A_green := !S3A_red;
+    S4A_green := !S4A_red;
+    S2B_green := !S2B_red;
+    S3B_green := !S3B_red;
+    S4B_green := !S4B_red;
+  VAR
+    S2A_red   : boolean;
+    S3A_red   : boolean;
+    S4A_red   : boolean;
+    S2B_red   : boolean;
+    S3B_red   : boolean;
+    S4B_red   : boolean;
+    P1A_goal_straight : boolean;
+    P2A_goal_straight : boolean;
+    P1B_goal_straight : boolean;
+    P2B_goal_straight : boolean;
+    P1A_goal_curved : boolean;
+    P2A_goal_curved : boolean;
+    P1B_goal_curved : boolean;
+    P2B_goal_curved : boolean;
+  ASSIGN
+    init(S2A_red) := TRUE;
+    init(S3A_red) := TRUE;
+    init(S4A_red) := TRUE;
+    init(S2B_red) := TRUE;
+    init(S3B_red) := TRUE;
+    init(S4B_red) := TRUE;
+    init(P1A_goal_straight) := FALSE;
+    init(P2A_goal_straight) := FALSE;
+    init(P1B_goal_straight) := FALSE;
+    init(P2B_goal_straight) := FALSE;
+    init(P1A_goal_curved) := FALSE;
+    init(P2A_goal_curved) := FALSE;
+    init(P1B_goal_curved) := FALSE;
+    init(P2B_goal_curved) := FALSE;
+    
+    next(S2A_red) := case
+        P1A_locked_straight & !T2A_occupied & !T3A_occupied : FALSE;
+        TRUE : TRUE;
+    esac;
+    next(S3A_red) := case
+        P1A_locked_straight & !T2A_occupied & !T1A_occupied : FALSE;
+        TRUE : TRUE;
+    esac;
+    next(S4A_red) := case
+        P2A_locked_curved & !T4A_occupied & ! T2B_occupied & ! T1B_occupied : FALSE;
+        TRUE : TRUE;
+    esac;
+    next(S2B_red) := case
+        P1B_locked_straight & !T2B_occupied & !T3B_occupied : FALSE;
+        TRUE : TRUE;
+    esac;
+    next(S3B_red) := case
+        P1B_locked_straight & !T2B_occupied & !T1B_occupied : FALSE;
+        TRUE : TRUE;
+    esac;
+    next(S4B_red) := case
+        P2B_locked_curved & !T4B_occupied & ! T2A_occupied & ! T1A_occupied : FALSE;
+        TRUE : TRUE;
+    esac;
+
+    next(P1A_goal_straight) := case
+      P1A_locked_straight : FALSE;
+      T1A_occupied : TRUE;
+      TRUE : P1A_goal_straight;
+    esac;
+    next(P2A_goal_straight) := case
+      P2A_locked_straight : FALSE;
+      T1B_occupied : TRUE;
+      TRUE : P2A_goal_straight;
+    esac;
+    next(P1B_goal_straight) := case
+      P1B_locked_straight : FALSE;
+      T1B_occupied : TRUE;
+      TRUE : P1B_goal_straight;
+    esac;
+    next(P2B_goal_straight) := case
+      P2B_locked_straight : FALSE;
+      T1A_occupied : TRUE;
+      TRUE : P2B_goal_straight;
+    esac;
+    next(P1A_goal_curved) := case
+      P1A_locked_curved | next(P1A_goal_straight) : FALSE;
+      T3B_occupied : TRUE;
+      TRUE : P1A_goal_curved;
+    esac;
+    next(P2A_goal_curved) := case
+      P2A_locked_curved | next(P2A_goal_straight) : FALSE;
+      T3A_occupied : TRUE;
+      TRUE : P2A_goal_curved;
+    esac;
+    next(P1B_goal_curved) := case
+      P1B_locked_curved | next(P1B_goal_straight) : FALSE;
+      T3A_occupied : TRUE;
+      TRUE : P1B_goal_curved;
+    esac;
+    next(P2B_goal_curved) := case
+      P2B_locked_curved | next(P2B_goal_straight) : FALSE;
+      T3B_occupied : TRUE;
+      TRUE : P2B_goal_curved;
+    esac;
+
+
+MODULE main
+  DEFINE
+    T1A_occupied := environment.T1A_occupied;
+    T2A_occupied := environment.T2A_occupied;
+    T3A_occupied := environment.T3A_occupied;
+    T4A_occupied := environment.T4A_occupied;
+    T1B_occupied := environment.T1B_occupied;
+    T2B_occupied := environment.T2B_occupied;
+    T3B_occupied := environment.T3B_occupied;
+    T4B_occupied := environment.T4B_occupied;
+    S1A_red   := environment.S1A_red;
+    S1B_red   := environment.S1B_red;
+    S1A_green := environment.S1A_green;
+    S1B_green := environment.S1B_green;
+    P1A_locked_straight := environment.P1A_locked_straight;
+    P2A_locked_straight := environment.P2A_locked_straight;
+    P1B_locked_straight := environment.P1B_locked_straight;
+    P2B_locked_straight := environment.P2B_locked_straight;
+    P1A_locked_curved := environment.P1A_locked_curved;
+    P2A_locked_curved := environment.P2A_locked_curved;
+    P1B_locked_curved := environment.P1B_locked_curved;
+    P2B_locked_curved := environment.P2B_locked_curved;
+
+    S2A_red   := interlocking.S2A_red;
+    S3A_red   := interlocking.S3A_red;
+    S4A_red   := interlocking.S4A_red;
+    S2B_red   := interlocking.S2B_red;
+    S3B_red   := interlocking.S3B_red;
+    S4B_red   := interlocking.S4B_red;
+    S2A_green := interlocking.S2A_green;
+    S3A_green := interlocking.S3A_green;
+    S4A_green := interlocking.S4A_green;
+    S2B_green := interlocking.S2B_green;
+    S3B_green := interlocking.S3B_green;
+    S4B_green := interlocking.S4B_green;
+    P1A_goal_straight := interlocking.P1A_goal_straight;
+    P2A_goal_straight := interlocking.P2A_goal_straight;
+    P1B_goal_straight := interlocking.P1B_goal_straight;
+    P2B_goal_straight := interlocking.P2B_goal_straight;
+    P1A_goal_curved := interlocking.P1A_goal_curved;
+    P2A_goal_curved := interlocking.P2A_goal_curved;
+    P1B_goal_curved := interlocking.P1B_goal_curved;
+    P2B_goal_curved := interlocking.P2B_goal_curved;
+  VAR
+    environment  : Environment(
+        S2A_red,S3A_red,S4A_red,
+        S2B_red,S3B_red,S4B_red,
+        S2A_green,S3A_green,S4A_green,
+        S2B_green,S3B_green,S4B_green,
+        P1A_goal_straight,P1A_goal_curved,
+        P1B_goal_straight,P1B_goal_curved,
+        P2A_goal_straight,P2A_goal_curved,
+        P2B_goal_straight,P2B_goal_curved     
+    );
+    interlocking : Interlocking(
+        next(T1A_occupied),next(T2A_occupied),next(T3A_occupied),next(T4A_occupied),
+        next(T1B_occupied),next(T2B_occupied),next(T3B_occupied),next(T4B_occupied),
+        next(S1A_red),next(S1A_green),next(S1B_red),next(S1B_green),
+        next(P1A_locked_straight),next(P1A_locked_curved),
+        next(P1B_locked_straight),next(P1B_locked_curved),
+        next(P2A_locked_straight),next(P2A_locked_curved),
+        next(P2B_locked_straight),next(P2B_locked_curved)
+    );
+
+FAIRNESS P1A_locked_curved | P1A_locked_straight
+FAIRNESS P1B_locked_curved | P1B_locked_straight
+FAIRNESS P2A_locked_curved | P2A_locked_straight
+FAIRNESS P2B_locked_curved | P2B_locked_straight
+
+-- For each of the tracks T3A and T3B there is at least one test case
+-- in which the track is occupied at least once.
+
+CTLSPEC EF T3A_occupied;
+CTLSPEC EF T3B_occupied;
+
+LTLSPEC NAME liveness1a := (G F T1A_occupied & S1A_red & S2A_red) -> (G F S1A_green | S2A_green)
+LTLSPEC NAME liveness1b := (G F T3A_occupied & S3A_red & S4A_red) -> (G F S3A_green | S4A_green)
+LTLSPEC NAME liveness1c := (G F T3B_occupied & S3B_red & S4B_red) -> (G F S3B_green | S4B_green)
+LTLSPEC NAME liveness1d := (G F T1B_occupied & S1B_red & S2B_red) -> (G F S1B_green | S2B_green)
+
+LTLSPEC NAME liveness2 := G F (!T1A_occupied) & G F (!T1B_occupied) & G F (!T2A_occupied) & G F (!T2B_occupied) & G F (!T3A_occupied) & G F (!T3B_occupied) & G F (!T4A_occupied) & G F (!T4B_occupied);
+
+CTLSPEC NAME liveness3 := AG EF T3A_occupied;
+
+CTLSPEC NAME liveness4 := EF T3A_occupied & T3B_occupied
+
+-- For some reason T0A_occupied is undefined? Same for T0B_occupied?
+-- CTLSPEC NAME safety1a := AG(T0A_occupied -> S1A_red)
+CTLSPEC NAME safety1b := AG((!((!T2A_occupied & !T3A_occupied & P1A_locked_straight & P2B_locked_straight) | (!T2A_occupied & !T4B_occupied & !T3B_occupied & P1A_locked_curved & P2B_locked_curved))) -> S2A_red)
+
+CTLSPEC NAME safety1c := AG(!(!T2A_occupied & !T1A_occupied & P1A_locked_straight & P2B_locked_straight) -> S3A_red)
+
+CTLSPEC NAME safety1d := AG(!(!T4A_occupied & !T2B_occupied & !T1B_occupied & P2A_locked_curved & P1B_locked_curved) -> S4A_red)
+
+CTLSPEC NAME safety1e := AG(!(!T2A_occupied & !T4B_occupied & !T1A_occupied & P1A_locked_curved & P2B_locked_curved) -> S4B_red)
+
+CTLSPEC NAME safety1f := AG(!(!T1B_occupied & !T2B_occupied & P1B_locked_straight & P2A_locked_straight) -> S3B_red)
+
+CTLSPEC NAME safety1g := AG((!((!T2B_occupied & !T3B_occupied & P2A_locked_straight & P1B_locked_straight) | (!T2B_occupied & !T4A_occupied & !T3A_occupied & P2A_locked_curved & P1B_locked_curved))) -> S2B_red)
+
+-- CTLSPEC NAME safety1h := (T0B_occupied -> S1B_red)
+
+LTLSPEC NAME safety2 := G(
+  ((!S1A_red & S1A_green) | (S1A_red & !S1A_green)) &
+  ((!S1B_red & S1B_green) | (S1B_red & !S1B_green)) &
+  ((!S2A_red & S2A_green) | (S2A_red & !S2A_green)) &
+  ((!S2B_red & S2B_green) | (S2B_red & !S2B_green)) &
+  ((!S3A_red & S3A_green) | (S3A_red & !S3A_green)) &
+  ((!S3B_red & S3B_green) | (S3B_red & !S3B_green)) &
+  ((!S4A_red & S4A_green) | (S4A_red & !S4A_green)) &
+  ((!S4B_red & S4B_green) | (S4B_red & !S4B_green)))
+
+LTLSPEC NAME safety3 := G
+  ((!P1A_goal_straight | !P1A_goal_curved) &
+  (!P1B_goal_straight | !P1B_goal_curved) &
+  (!P2A_goal_straight | !P2A_goal_curved) &
+  (!P2B_goal_straight | !P2B_goal_curved))
+
+CTLSPEC NAME safety4a := AG P1A_goal_straight -> A[P1A_goal_straight U P1A_locked_straight]
+CTLSPEC NAME safety4b := AG P1B_goal_straight -> A[P1B_goal_straight U P1B_locked_straight]
+CTLSPEC NAME safety4c := AG P2A_goal_straight -> A[P2A_goal_straight U P2A_locked_straight]
+CTLSPEC NAME safety4d := AG P2B_goal_straight -> A[P2B_goal_straight U P2B_locked_straight]
+CTLSPEC NAME safety4e := AG P1A_goal_curved -> A[P1A_goal_curved U P1A_locked_curved]
+CTLSPEC NAME safety4f := AG P1B_goal_curved -> A[P1B_goal_curved U P1B_locked_curved]
+CTLSPEC NAME safety4g := AG P2A_goal_curved -> A[P2A_goal_curved U P2A_locked_curved]
+CTLSPEC NAME safety4h := AG P2B_goal_curved -> A[P2B_goal_curved U P2B_locked_curved]
+
+LTLSPEC NAME safety5 := G 
+  -- (P1A_locked_curved | P1A_locked_straight | !T2A_occupied) &
+  -- (P1B_locked_curved | P1B_locked_straight| !T2B_occupied) & 
+  -- (P2A_locked_curved | P2A_locked_straight | !T4A_occupied) & 
+  (P2B_locked_curved | P2B_locked_straight | !T4B_occupied)
+
+LTLSPEC NAME safety6 := G
+  (!P2A_locked_straight | !T4A_occupied) &
+  (!P2B_locked_straight | !T4B_occupied)
+
+
