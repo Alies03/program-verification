@@ -5,6 +5,7 @@ void reach_error() { assert(0); }
 #include <stdlib.h>
 
 extern int __VERIFIER_nondet_int(void);
+extern void __VERIFIER_assume(int);
 
 static void fail(void) {
 ERROR: {reach_error();abort();}
@@ -112,12 +113,15 @@ static void inspect_after(struct list *shape)
 int main()
 {
     struct list *data = NULL;
-    while (__VERIFIER_nondet_int()) {
+    int test_length = __VERIFIER_nondet_int();
+    
+    __VERIFIER_assume(test_length > 0 && test_length < 3);
+    while (test_length > 0) {
         struct node *node = malloc(sizeof *node);
         if (!node)
             abort();
 
-        node->next = node;
+        node->next = NULL;
         node->value = __VERIFIER_nondet_int();
 
         struct list *item = malloc(sizeof *item);
@@ -127,6 +131,8 @@ int main()
         item->slist = node;
         item->next = data;
         data = item;
+
+        test_length--;
     }
 
     if (!data)
