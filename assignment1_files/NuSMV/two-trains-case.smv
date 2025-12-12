@@ -320,6 +320,10 @@ FAIRNESS P1A_locked_curved | P1A_locked_straight
 FAIRNESS P1B_locked_curved | P1B_locked_straight
 FAIRNESS P2A_locked_curved | P2A_locked_straight
 FAIRNESS P2B_locked_curved | P2B_locked_straight
+FAIRNESS T3A_occupied
+FAIRNESS T3B_occupied
+FAIRNESS T1A_occupied
+FAIRNESS T1B_occupied
 
 -- For each of the tracks T3A and T3B there is at least one test case
 -- in which the track is occupied at least once.
