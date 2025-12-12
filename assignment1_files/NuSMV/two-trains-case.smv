@@ -192,7 +192,6 @@ MODULE Interlocking(
         TRUE : TRUE;
     esac;
     next(S3A_red) := case
-        P1A_locked_straight & P2B_locked_straight & !T2A_occupied & !T1A_occupied : FALSE;
         TRUE : TRUE;
     esac;
     next(S4A_red) := case
@@ -204,7 +203,6 @@ MODULE Interlocking(
         TRUE : TRUE;
     esac;
     next(S3B_red) := case
-        P1B_locked_straight & P2A_locked_straight & !T2B_occupied & !T1B_occupied : FALSE;
         TRUE : TRUE;
     esac;
     next(S4B_red) := case
