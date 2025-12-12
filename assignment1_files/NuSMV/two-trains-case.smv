@@ -106,8 +106,8 @@ MODULE Environment(
     P2A_locked_curved := P2A.status=curved;
     P1B_locked_curved := P1B.status=curved;
     P2B_locked_curved := P2B.status=curved;
-    may_approach_A := !T1A_occupied & !S1A_red & !T2A_occupied & !T4B_occupied;
-    may_approach_B := !T1B_occupied & !S1B_red & !T4A_occupied & !T2B_occupied;
+    may_approach_A := !T1A_occupied & !S1A_red & !T2A_occupied & !T4B_occupied & !T3B_occupied;
+    may_approach_B := !T1B_occupied & !S1B_red & !T4A_occupied & !T2B_occupied & !T3A_occupied;
     
   VAR
     P1A : Points(P1A_goal_straight,P1A_goal_curved);
@@ -188,7 +188,7 @@ MODULE Interlocking(
     init(P2B_goal_curved) := FALSE;
     
     next(S2A_red) := case
-        P1A_locked_straight & P2B_locked_straight & !T2A_occupied & !T3A_occupied & !T4A_occupied : FALSE;
+        P1A_locked_straight & P2B_locked_straight & !T2A_occupied & !T3A_occupied & !T4B_occupied : FALSE;
         TRUE : TRUE;
     esac;
     next(S3A_red) := case
@@ -340,7 +340,7 @@ LTLSPEC NAME liveness2 := G F (!T1A_occupied) & G F (!T1B_occupied) & G F (!T2A_
 
 CTLSPEC NAME liveness3 := AG EF T3A_occupied;
 
-CTLSPEC NAME liveness4 := EF T3A_occupied & T3B_occupied
+CTLSPEC NAME liveness4 := EF (T3A_occupied & T3B_occupied)
 
 -- For some reason T0A_occupied is undefined? Same for T0B_occupied?
 -- CTLSPEC NAME safety1a := AG(T0A_occupied -> S1A_red)
@@ -384,10 +384,10 @@ CTLSPEC NAME safety4g := AG P2A_goal_curved -> A[P2A_goal_curved U P2A_locked_cu
 CTLSPEC NAME safety4h := AG P2B_goal_curved -> A[P2B_goal_curved U P2B_locked_curved]
 
 LTLSPEC NAME safety5 := G 
-  -- (P1A_locked_curved | P1A_locked_straight | !T2A_occupied) &
-  -- (P1B_locked_curved | P1B_locked_straight| !T2B_occupied) & 
-  -- (P2A_locked_curved | P2A_locked_straight | !T4A_occupied) & 
-  (P2B_locked_curved | P2B_locked_straight | !T4B_occupied)
+  ((P1A_locked_curved | P1A_locked_straight | !T2A_occupied) &
+  (P1B_locked_curved | P1B_locked_straight| !T2B_occupied) & 
+  (P2A_locked_curved | P2A_locked_straight | !T4A_occupied) & 
+  (P2B_locked_curved | P2B_locked_straight | !T4B_occupied))
 
 LTLSPEC NAME safety6 := G
   (!P2A_locked_straight | !T4A_occupied) &
