@@ -103,8 +103,8 @@ MODULE Environment(
     P2A_locked_curved := P2A.status=curved;
     P1B_locked_curved := P1B.status=curved;
     P2B_locked_curved := P2B.status=curved;
-    may_approach_A := TRUE;
-    may_approach_B := TRUE;
+    may_approach_A := !T1A_occupied;
+    may_approach_B := !T1B_occupied;
     
   VAR
     P1A : Points(P1A_goal_straight,P1A_goal_curved);
@@ -211,41 +211,49 @@ MODULE Interlocking(
 
     next(P1A_goal_straight) := case
       P1A_locked_straight : FALSE;
+      T3B_occupied : FALSE;
       T1A_occupied & !T4B_occupied: TRUE;
       TRUE : P1A_goal_straight;
     esac;
     next(P2A_goal_straight) := case
       P2A_locked_straight : FALSE;
+      T3A_occupied: FALSE;
       T1B_occupied & !T4A_occupied : TRUE;
       TRUE : P2A_goal_straight;
     esac;
     next(P1B_goal_straight) := case
       P1B_locked_straight : FALSE;
+      T3A_occupied : FALSE;
       T1B_occupied & !T2B_occupied: TRUE;
       TRUE : P1B_goal_straight;
     esac;
     next(P2B_goal_straight) := case
       P2B_locked_straight : FALSE;
+      T3B_occupied: FALSE;
       T1A_occupied & !T4B_occupied : TRUE;
       TRUE : P2B_goal_straight;
     esac;
     next(P1A_goal_curved) := case
       P1A_locked_curved | next(P1A_goal_straight) : FALSE;
+      T1A_occupied : FALSE;
       T3B_occupied & !T2A_occupied : TRUE;
       TRUE : P1A_goal_curved;
     esac;
     next(P2A_goal_curved) := case
       P2A_locked_curved | next(P2A_goal_straight) : FALSE;
+      T1B_occupied : FALSE;
       T3A_occupied & !T4A_occupied : TRUE;
       TRUE : P2A_goal_curved;
     esac;
     next(P1B_goal_curved) := case
       P1B_locked_curved | next(P1B_goal_straight) : FALSE;
+      T1B_occupied: FALSE;
       T3A_occupied & !T2B_occupied: TRUE;
       TRUE : P1B_goal_curved;
     esac;
     next(P2B_goal_curved) := case
       P2B_locked_curved | next(P2B_goal_straight) : FALSE;
+      T1A_occupied: FALSE;
       T3B_occupied & !T4B_occupied: TRUE;
       TRUE : P2B_goal_curved;
     esac;
