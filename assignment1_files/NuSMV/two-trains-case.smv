@@ -71,6 +71,9 @@ MODULE Train (
       TRUE:location;
     esac;
 
+FAIRNESS location=T0A 
+FAIRNESS location=T0B 
+
 MODULE Environment(
         S2A_red,S3A_red,S4A_red,
         S2B_red,S3B_red,S4B_red,
