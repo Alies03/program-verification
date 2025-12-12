@@ -71,9 +71,6 @@ MODULE Train (
       TRUE:location;
     esac;
 
-FAIRNESS location=T0A 
-FAIRNESS location=T0B 
-
 MODULE Environment(
         S2A_red,S3A_red,S4A_red,
         S2B_red,S3B_red,S4B_red,
@@ -320,16 +317,6 @@ FAIRNESS P1A_locked_curved | P1A_locked_straight
 FAIRNESS P1B_locked_curved | P1B_locked_straight
 FAIRNESS P2A_locked_curved | P2A_locked_straight
 FAIRNESS P2B_locked_curved | P2B_locked_straight
-FAIRNESS T3A_occupied
-FAIRNESS T3B_occupied
-FAIRNESS T1A_occupied
-FAIRNESS T1B_occupied
-
--- For each of the tracks T3A and T3B there is at least one test case
--- in which the track is occupied at least once.
-
-CTLSPEC EF T3A_occupied;
-CTLSPEC EF T3B_occupied;
 
 LTLSPEC NAME liveness1a := (G F T1A_occupied & S1A_red & S2A_red) -> (G F (S1A_green | S2A_green))
 LTLSPEC NAME liveness1b := (G F T3A_occupied & S3A_red & S4A_red) -> (G F (S3A_green | S4A_green))
@@ -342,21 +329,17 @@ CTLSPEC NAME liveness3 := AG EF T3A_occupied;
 
 CTLSPEC NAME liveness4 := EF (T3A_occupied & T3B_occupied)
 
--- For some reason T0A_occupied is undefined? Same for T0B_occupied?
--- CTLSPEC NAME safety1a := AG(T0A_occupied -> S1A_red)
-CTLSPEC NAME safety1b := AG((!((!T2A_occupied & !T3A_occupied & P1A_locked_straight & P2B_locked_straight) | (!T2A_occupied & !T4B_occupied & !T3B_occupied & P1A_locked_curved & P2B_locked_curved))) -> S2A_red)
+CTLSPEC NAME safety1a := AG((!((!T2A_occupied & !T3A_occupied & P1A_locked_straight & P2B_locked_straight) | (!T2A_occupied & !T4B_occupied & !T3B_occupied & P1A_locked_curved & P2B_locked_curved))) -> S2A_red)
 
-CTLSPEC NAME safety1c := AG(!(!T2A_occupied & !T1A_occupied & P1A_locked_straight & P2B_locked_straight) -> S3A_red)
+CTLSPEC NAME safety1b := AG(!(!T2A_occupied & !T1A_occupied & P1A_locked_straight & P2B_locked_straight) -> S3A_red)
 
-CTLSPEC NAME safety1d := AG(!(!T4A_occupied & !T2B_occupied & !T1B_occupied & P2A_locked_curved & P1B_locked_curved) -> S4A_red)
+CTLSPEC NAME safety1c := AG(!(!T4A_occupied & !T2B_occupied & !T1B_occupied & P2A_locked_curved & P1B_locked_curved) -> S4A_red)
 
-CTLSPEC NAME safety1e := AG(!(!T2A_occupied & !T4B_occupied & !T1A_occupied & P1A_locked_curved & P2B_locked_curved) -> S4B_red)
+CTLSPEC NAME safety1d := AG(!(!T2A_occupied & !T4B_occupied & !T1A_occupied & P1A_locked_curved & P2B_locked_curved) -> S4B_red)
 
-CTLSPEC NAME safety1f := AG(!(!T1B_occupied & !T2B_occupied & P1B_locked_straight & P2A_locked_straight) -> S3B_red)
+CTLSPEC NAME safety1e := AG(!(!T1B_occupied & !T2B_occupied & P1B_locked_straight & P2A_locked_straight) -> S3B_red)
 
-CTLSPEC NAME safety1g := AG((!((!T2B_occupied & !T3B_occupied & P2A_locked_straight & P1B_locked_straight) | (!T2B_occupied & !T4A_occupied & !T3A_occupied & P2A_locked_curved & P1B_locked_curved))) -> S2B_red)
-
--- CTLSPEC NAME safety1h := (T0B_occupied -> S1B_red)
+CTLSPEC NAME safety1f := AG((!((!T2B_occupied & !T3B_occupied & P2A_locked_straight & P1B_locked_straight) | (!T2B_occupied & !T4A_occupied & !T3A_occupied & P2A_locked_curved & P1B_locked_curved))) -> S2B_red)
 
 LTLSPEC NAME safety2 := G(
   ((!S1A_red & S1A_green) | (S1A_red & !S1A_green)) &
@@ -384,13 +367,11 @@ CTLSPEC NAME safety4g := AG P2A_goal_curved -> A[P2A_goal_curved U P2A_locked_cu
 CTLSPEC NAME safety4h := AG P2B_goal_curved -> A[P2B_goal_curved U P2B_locked_curved]
 
 LTLSPEC NAME safety5 := G 
-  ((P1A_locked_curved | P1A_locked_straight | !T2A_occupied) &
+  (P1A_locked_curved | P1A_locked_straight | !T2A_occupied) &
   (P1B_locked_curved | P1B_locked_straight| !T2B_occupied) & 
   (P2A_locked_curved | P2A_locked_straight | !T4A_occupied) & 
-  (P2B_locked_curved | P2B_locked_straight | !T4B_occupied))
+  (P2B_locked_curved | P2B_locked_straight | !T4B_occupied)
 
 LTLSPEC NAME safety6 := G
   (!P2A_locked_straight | !T4A_occupied) &
   (!P2B_locked_straight | !T4B_occupied)
-
-
