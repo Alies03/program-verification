@@ -185,27 +185,27 @@ MODULE Interlocking(
     init(P2B_goal_curved) := FALSE;
     
     next(S2A_red) := case
-        P1A_locked_straight & !T2A_occupied & !T3A_occupied : FALSE;
+        P1A_locked_straight & P2B_locked_straight & !T2A_occupied & !T3A_occupied : FALSE;
         TRUE : TRUE;
     esac;
     next(S3A_red) := case
-        P1A_locked_straight & !T2A_occupied & !T1A_occupied : FALSE;
+        P1A_locked_straight & P2B_locked_straight & !T2A_occupied & !T1A_occupied : FALSE;
         TRUE : TRUE;
     esac;
     next(S4A_red) := case
-        P2A_locked_curved & !T4A_occupied & ! T2B_occupied & ! T1B_occupied : FALSE;
+        P2A_locked_curved & P1B_locked_curved & !T4A_occupied & ! T2B_occupied & ! T1B_occupied & P1B_locked_curved : FALSE;
         TRUE : TRUE;
     esac;
     next(S2B_red) := case
-        P1B_locked_straight & !T2B_occupied & !T3B_occupied : FALSE;
+        P1B_locked_straight & P2A_locked_straight & !T2B_occupied & !T3B_occupied : FALSE;
         TRUE : TRUE;
     esac;
     next(S3B_red) := case
-        P1B_locked_straight & !T2B_occupied & !T1B_occupied : FALSE;
+        P1B_locked_straight & P2A_locked_straight & !T2B_occupied & !T1B_occupied : FALSE;
         TRUE : TRUE;
     esac;
     next(S4B_red) := case
-        P2B_locked_curved & !T4B_occupied & ! T2A_occupied & ! T1A_occupied : FALSE;
+        P2B_locked_curved & P1A_locked_curved & !T4B_occupied & ! T2A_occupied & ! T1A_occupied : FALSE;
         TRUE : TRUE;
     esac;
 
