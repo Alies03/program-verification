@@ -103,8 +103,8 @@ MODULE Environment(
     P2A_locked_curved := P2A.status=curved;
     P1B_locked_curved := P1B.status=curved;
     P2B_locked_curved := P2B.status=curved;
-    may_approach_A := !T1A_occupied;
-    may_approach_B := !T1B_occupied;
+    may_approach_A := !T1A_occupied & !S1A_red;
+    may_approach_B := !T1B_occupied & !S1B_red;
     
   VAR
     P1A : Points(P1A_goal_straight,P1A_goal_curved);
