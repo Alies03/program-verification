@@ -327,10 +327,10 @@ FAIRNESS P2B_locked_curved | P2B_locked_straight
 CTLSPEC EF T3A_occupied;
 CTLSPEC EF T3B_occupied;
 
-LTLSPEC NAME liveness1a := (G F T1A_occupied & S1A_red & S2A_red) -> (G F S1A_green | S2A_green)
-LTLSPEC NAME liveness1b := (G F T3A_occupied & S3A_red & S4A_red) -> (G F S3A_green | S4A_green)
-LTLSPEC NAME liveness1c := (G F T3B_occupied & S3B_red & S4B_red) -> (G F S3B_green | S4B_green)
-LTLSPEC NAME liveness1d := (G F T1B_occupied & S1B_red & S2B_red) -> (G F S1B_green | S2B_green)
+LTLSPEC NAME liveness1a := (G F T1A_occupied & S1A_red & S2A_red) -> (G F (S1A_green | S2A_green))
+LTLSPEC NAME liveness1b := (G F T3A_occupied & S3A_red & S4A_red) -> (G F (S3A_green | S4A_green))
+LTLSPEC NAME liveness1c := (G F T3B_occupied & S3B_red & S4B_red) -> (G F (S3B_green | S4B_green))
+LTLSPEC NAME liveness1d := (G F T1B_occupied & S1B_red & S2B_red) -> (G F (S1B_green | S2B_green))
 
 LTLSPEC NAME liveness2 := G F (!T1A_occupied) & G F (!T1B_occupied) & G F (!T2A_occupied) & G F (!T2B_occupied) & G F (!T3A_occupied) & G F (!T3B_occupied) & G F (!T4A_occupied) & G F (!T4B_occupied);
 
