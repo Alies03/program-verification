@@ -3,6 +3,7 @@ int head = 0;
 int tail = 0;
 int const maxlen = 4;
 
+
 /*@
   requires 0 <= head < maxlen;
   requires 0 <= tail < maxlen;
@@ -99,7 +100,7 @@ int put(int data) {
 	return 0;
 }
 
-
+//@ assigns buffer, head, tail;
 int main() {
 	int data[4];
 	buffer = data;
@@ -109,6 +110,11 @@ int main() {
 	int b = 1;
 	put(a);
 	put(b);
+    /*@ loop invariant 2 <= i <= maxlen-1;
+        loop invariant 0 <= head <= maxlen - 1;
+        loop assigns i, buffer[0 .. maxlen - 1], head, a, b;
+        loop variant maxlen - 1 - i; 
+    */
 	for (int i = 2; i < maxlen-1; i++) {
 		int sum = a + b;
 		if(put(sum)) {
@@ -119,6 +125,11 @@ int main() {
 		b = sum;
 	}
 
+    /*@ loop invariant 0 <= j <= maxlen-1;
+        loop invariant 0 <= tail <= maxlen - 1;
+        loop assigns j, out[0 .. maxlen - 1], tail;
+        loop variant maxlen - 1 - j;
+    */
 	for (int j = 0; j < maxlen-1; j++) {
 		if (get(&out[j])) {
 			// Buffer is empty
@@ -127,4 +138,3 @@ int main() {
 	}
 	return 0;
 }
-
