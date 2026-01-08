@@ -100,7 +100,8 @@ int put(int data) {
 	return 0;
 }
 
-//@ assigns buffer, head, tail;
+//@ ghost int count;
+//@ assigns buffer, head, tail, count;
 int main() {
 	int data[4];
 	buffer = data;
@@ -109,10 +110,13 @@ int main() {
 	int a = 1;
 	int b = 1;
 	put(a);
+    //@ ghost count = count + 1;
 	put(b);
+    //@ ghost count = count + 1;
     /*@ loop invariant 2 <= i <= maxlen-1;
         loop invariant 0 <= head <= maxlen - 1;
-        loop assigns i, buffer[0 .. maxlen - 1], head, a, b;
+        loop invariant count == i;
+        loop assigns i, buffer[0 .. maxlen - 1], head, a, b, count;
         loop variant maxlen - 1 - i; 
     */
 	for (int i = 2; i < maxlen-1; i++) {
@@ -121,13 +125,15 @@ int main() {
 			// Out of space
 			return -1;
 		}
+        //@ ghost count = count + 1;
 		a = b;
 		b = sum;
 	}
 
     /*@ loop invariant 0 <= j <= maxlen-1;
         loop invariant 0 <= tail <= maxlen - 1;
-        loop assigns j, out[0 .. maxlen - 1], tail;
+        loop invariant count == maxlen - 1 - j;
+        loop assigns j, out[0 .. maxlen - 1], tail, count;
         loop variant maxlen - 1 - j;
     */
 	for (int j = 0; j < maxlen-1; j++) {
@@ -135,6 +141,8 @@ int main() {
 			// Buffer is empty
 			return -1;
 		}
+        //@ ghost count = count - 1;
 	}
+    //@ assert count == 0;
 	return 0;
 }
