@@ -130,6 +130,9 @@ int main() {
 		b = sum;
 	}
 
+	//@ ghost int num_elements = (head - tail + maxlen) % maxlen;
+	//@ assert  num_elements >= 3 ==> (\forall integer i; 0 <= i <= num_elements - 3 ==> (buffer[(tail + i) % maxlen] + buffer[(tail + i + 1) % maxlen] == buffer[(tail + i + 2) % maxlen]));
+
     /*@ loop invariant 0 <= j <= maxlen-1;
         loop invariant 0 <= tail <= maxlen - 1;
         loop invariant count == maxlen - 1 - j;
