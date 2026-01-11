@@ -1,6 +1,6 @@
 //interface Wallet 
 //@ ghost int count;
-//@ global invariant I: count >= 0;
+//@ global invariant J: count >= 0;
 
 /*@
     requires count>=price;
