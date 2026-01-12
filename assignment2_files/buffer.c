@@ -45,8 +45,6 @@ int get(int *output_arr) {
 	*output_arr = buffer[tail];
 	
 	tail = next;
-	//@ ghost int num_elements = (head - tail + maxlen) % maxlen;
-	//@ assert  num_elements >= 3 ==> (\forall integer i; 0 <= i <= num_elements - 3 ==> (buffer[(tail + i) % maxlen] + buffer[(tail + i + 1) % maxlen] == buffer[(tail + i + 2) % maxlen]));
 	return 0;
 }
 
@@ -88,8 +86,6 @@ int put(int data) {
 	
 	buffer[head] = data;
 	head = next;
-	//@ ghost int num_elements = (head - tail + maxlen) % maxlen;
-	//@ assert  num_elements >= 3 ==> (\forall integer i; 0 <= i <= num_elements - 3 ==> (buffer[(tail + i) % maxlen] + buffer[(tail + i + 1) % maxlen] == buffer[(tail + i + 2) % maxlen]));
 	return 0;
 }
 
@@ -141,5 +137,7 @@ int main() {
         //@ ghost count = count - 1;
 	}
     //@ assert count == 0;
+	//@ ghost int num_elements = (head - tail + maxlen) % maxlen;
+	//@ assert  num_elements >= 3 ==> (\forall integer i; 0 <= i <= num_elements - 3 ==> (buffer[(tail + i) % maxlen] + buffer[(tail + i + 1) % maxlen] == buffer[(tail + i + 2) % maxlen]));
 	return 0;
 }
