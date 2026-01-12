@@ -116,6 +116,7 @@ int main() {
     //@ ghost count = count + 1;
     /*@ loop invariant 2 <= i <= maxlen-1;
         loop invariant 0 <= head <= maxlen - 1;
+        loop invariant 0 <= a <= b;
         loop invariant count == i;
         loop invariant full == 0 || full == 1;
         loop assigns i, buffer[0 .. maxlen - 1], head, a, b, count, full;
