@@ -7,7 +7,6 @@ static int saving;
 //@ global invariant I: money + saving >= 0;
 
 /*@ 
-    requires count>=price;
 	requires money + saving >= price;
 	requires count == money + saving;
 	assigns money, saving, count;

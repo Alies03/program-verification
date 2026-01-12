@@ -34,7 +34,6 @@ Therefore 1 Galleon = 17 Sickles = 493 Knuts. */
     
 /* Pay money to someone. The price is specified in Knuts. */
 /*@ 
-    requires count>=price;
 	requires 493 * galleon + 29 * sickle + knut >= price;
 	requires count == 493 * galleon + 29 * sickle + knut;
 	assigns galleon, sickle, knut, count;
