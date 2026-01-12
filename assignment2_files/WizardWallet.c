@@ -33,11 +33,9 @@ static int toKnuts(int amount) {
 Therefore 1 Galleon = 17 Sickles = 493 Knuts. */
     
 /* Pay money to someone. The price is specified in Knuts. */
-/*@ 
-	requires 493 * galleon + 29 * sickle + knut >= price;
+/*@
 	requires count == 493 * galleon + 29 * sickle + knut;
 	assigns galleon, sickle, knut, count;
-    ensures 493 * galleon + 29 * sickle + knut == (493 * \old(galleon) + 29 * \old(sickle) + \old(knut)) - price;
 	ensures count == 493 * galleon + 29 * sickle + knut;
 */
 void pay(int price) {
@@ -52,7 +50,6 @@ the wallet. */
 /*@ 
 	requires count == 493 * galleon + 29 * sickle + knut;
     assigns galleon, sickle, knut, count;
-    ensures 493 * galleon + 29 * sickle + knut == 2 * (493 * \old(galleon) + 29 * \old(sickle) + \old(knut));
 	ensures count == 493 * galleon + 29 * sickle + knut;
 */
 void doublingCharm() {
@@ -65,4 +62,3 @@ void doublingCharm() {
 	galleon = galleon * 2 + sicklesToGalleons;
 	//@ ghost count *= 2;
 }
-

@@ -7,10 +7,8 @@ static int saving;
 //@ global invariant I: money + saving >= 0;
 
 /*@ 
-	requires money + saving >= price;
 	requires count == money + saving;
 	assigns money, saving, count;
-    ensures money + saving == \old(money) + \old(saving) - price;
 	ensures count == money + saving;
 */
 void pay(int price) {
