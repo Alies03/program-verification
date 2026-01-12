@@ -5,14 +5,26 @@ static int galleon;
 static int sickle;
 static int knut;
   
+/*@
+	assigns \nothing;
+	ensures \result == amount / 493;
+*/
 static int toGalleons(int amount) {
 	return amount / 493;
 }
  
+/*@
+	assigns \nothing;
+	ensures \result == (amount % 493) / 29;
+*/
 static int toSickles(int amount) {
 	return (amount % 493) / 29;
 }
 
+/*@
+	assigns \nothing;
+	ensures \result == (amount % 493) % 29;
+*/
 static int toKnuts(int amount) {
 	return (amount % 493) % 29;
 }
@@ -21,14 +33,29 @@ static int toKnuts(int amount) {
 Therefore 1 Galleon = 17 Sickles = 493 Knuts. */
     
 /* Pay money to someone. The price is specified in Knuts. */
+/*@ 
+    requires count>=price;
+	requires 493 * galleon + 29 * sickle + knut >= price;
+	requires count == 493 * galleon + 29 * sickle + knut;
+	assigns galleon, sickle, knut, count;
+    ensures 493 * galleon + 29 * sickle + knut == (493 * \old(galleon) + 29 * \old(sickle) + \old(knut)) - price;
+	ensures count == 493 * galleon + 29 * sickle + knut;
+*/
 void pay(int price) {
 	galleon = galleon - toGalleons(price);
 	sickle = sickle - toSickles(price);
 	knut = knut - toKnuts(price);
+	//@ ghost count -= price;
 }
 
 /* Performs the Doubling Charm. This charm doubles the amount of money in
 the wallet. */
+/*@ 
+	requires count == 493 * galleon + 29 * sickle + knut;
+    assigns galleon, sickle, knut, count;
+    ensures 493 * galleon + 29 * sickle + knut == 2 * (493 * \old(galleon) + 29 * \old(sickle) + \old(knut));
+	ensures count == 493 * galleon + 29 * sickle + knut;
+*/
 void doublingCharm() {
 	knut = knut * 2;
 	int knutToSickles = knut / 29;
@@ -37,5 +64,6 @@ void doublingCharm() {
 	int sicklesToGalleons = sickle / 17;
 	sickle = sickle % 17;
 	galleon = galleon * 2 + sicklesToGalleons;
+	//@ ghost count *= 2;
 }
 
